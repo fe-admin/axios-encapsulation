@@ -80,8 +80,6 @@ export default class AxiosInstanceClass implements AxiosClass {
       }
     );
   }
-
-
 }
 
 

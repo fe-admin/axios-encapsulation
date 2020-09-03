@@ -15,22 +15,3 @@ export function detectDuplicateRequests(request: PendingItem, config: AxiosConfi
   }
   return falg;
 }
-
-/**
- * 全局错误处理函数
- * @param {*} promise
- * @param {*} handle
- */
-export function ErrorBoundary<T>(promise: Promise<T>, handle?: () => void): Promise<any> {
-  return promise
-    .then(data => [null, data])
-    .catch(err => {
-      console.info(err)
-      if (!handle) {
-        setTimeout(() => {
-          throw Error(err.message);
-        }, 16);
-      }
-      return [err];
-    });
-}
