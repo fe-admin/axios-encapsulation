@@ -1,0 +1,34 @@
+{
+  "name": "axios-encapsulation",
+  "version": "1.0.0",
+  "description": "one encapsulation for axios ",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fe-cookbook/axios-encapsulation.git"
+  },
+  "keywords": [
+    "axios",
+    "encapsulation"
+  ],
+  "author": "tjubao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fe-cookbook/axios-encapsulation/issues"
+  },
+  "homepage": "https://github.com/fe-cookbook/axios-encapsulation#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "axios-retry": "^3.1.8",
+    "lodash.set": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/lodash.set": "^4.3.6",
+    "typescript": "^4.0.2"
+  },
+  "types": "./lib/index.d.ts"
+}
