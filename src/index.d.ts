@@ -8,6 +8,7 @@ export interface AxiosClass {
 
 export interface AxiosConfig extends AxiosRequestConfig {
   axiosRetryConfig?: IAxiosRetryConfig;
+  responseChain?: [],
   transformResponseData: (config: AxiosResponse) => any
 }
 

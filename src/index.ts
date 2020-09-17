@@ -47,7 +47,7 @@ export default class AxiosInstanceClass implements AxiosClass {
     Instance.interceptors.request.use(config => {
       const { method, params } = config
       if (config.method === 'get') {
-        config.params = { ...config.params, stamp: Math.random() };
+        config.params = { ...config.params };
       }
       this.removePending(config);
       config.cancelToken = new CancelToken(executor => {
@@ -58,27 +58,26 @@ export default class AxiosInstanceClass implements AxiosClass {
     });
   }
 
-  addResponseInterceptors(callback: ResponseInterceptorsFunc) {
-    const { Instance } = this;
-    Instance.interceptors.response.use(
-      res => callback(res)
-    );
-  }
 
   setResponseInterceptors(options: AxiosConfig) {
     const { Instance } = this;
-    const { transformResponseData } = options;
-    Instance.interceptors.response.use(
-      res => {
-        if (res) {
-          this.removePending(res.config);
-          return transformResponseData(res);
-        }
-      },
-      (err) => {
-        return Promise.reject(err);
-      }
-    );
+    const { responseChain } = options;
+    if (Array.isArray(responseChain)) {
+      responseChain.forEach((executer: Function, index) => {
+        Instance.interceptors.response.use(
+          res => {
+            if (res) {
+              index === 0 && this.removePending(res.config);
+              return executer(res);
+            }
+          },
+          (err) => {
+            return Promise.reject(err);
+          }
+        );
+      })
+    }
+
   }
 }
 
