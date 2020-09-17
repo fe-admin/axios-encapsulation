@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { AxiosClass, PendingItem, AxiosConfig, ResponseInterceptorsFunc } from './index.d';
+import { AxiosClass, PendingItem, AxiosConfig } from './index.d';
 export default class AxiosInstanceClass implements AxiosClass {
     pending: PendingItem[];
     Instance: AxiosInstance;
@@ -8,6 +8,5 @@ export default class AxiosInstanceClass implements AxiosClass {
     removePending(config: any): void;
     addRequestInterceptors(path: string, value: object): void;
     setRequestInterceptors(): void;
-    addResponseInterceptors(callback: ResponseInterceptorsFunc): void;
     setResponseInterceptors(options: AxiosConfig): void;
 }
