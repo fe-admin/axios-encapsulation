@@ -1,22 +1,44 @@
+/*
+ * @Author: jubao.tian 
+ * @Date: 2020-09-29 10:23:30 
+ * @Last Modified by: jubao.tian
+ * @Last Modified time: 2020-09-29 14:31:37
+ */
 import set from 'lodash.set';
 import axiosRetry from 'axios-retry';
 import axios, { AxiosInstance, CancelToken } from 'axios';
 import { detectDuplicateRequests } from './util';
-import { AxiosClass, PendingItem, AxiosConfig, ResponseInterceptorsFunc } from './index.d';
+import { AxiosClass, PendingItem, AxiosConfig } from './index.d';
 
 const { CancelToken } = axios;
-export default class AxiosInstanceClass implements AxiosClass {
+/**
+ * axios encapsulation封装类
+ */
+export default class EncapsulationClass implements AxiosClass {
   pending: PendingItem[] = [];
-  public Instance;
+  public axiosInstance;
+  /**
+   * 描述 构造函数
+   * @date 2020-09-29
+   * @param {any} options:AxiosConfig
+   * @returns {any}
+   */
   constructor(options: AxiosConfig) {
+    // Axios实例
     const Instance: AxiosInstance = axios.create(options);
-    this.Instance = Instance;
-    this.instance(options);
+    this.axiosInstance = Instance;
+    this.init(options);
   }
 
-  instance(options: AxiosConfig) {
+  /**
+   * 初始化函数
+   * @date 2020-09-29
+   * @param {any} options:AxiosConfig
+   * @returns {any}
+   */
+  init(options: AxiosConfig) {
     if (options.axiosRetryConfig) {
-      axiosRetry(this.Instance, options.axiosRetryConfig);
+      axiosRetry(this.axiosInstance, options.axiosRetryConfig);
     }
     this.setRequestInterceptors();
     this.setResponseInterceptors(options);
@@ -35,16 +57,21 @@ export default class AxiosInstanceClass implements AxiosClass {
   }
 
   addRequestInterceptors(path: string, value: object) {
-    const { Instance } = this;
-    Instance.interceptors.request.use(config => {
+    const { axiosInstance } = this;
+    axiosInstance.interceptors.request.use(config => {
       set(config, path, value);
       return config;
     });
   }
 
+  /**
+   * 设置请求拦截器
+   * @date 2020-09-29
+   * @returns {any}
+   */
   setRequestInterceptors() {
-    const { Instance, pending } = this;
-    Instance.interceptors.request.use(config => {
+    const { axiosInstance, pending } = this;
+    axiosInstance.interceptors.request.use(config => {
       const { method, params } = config
       if (config.method === 'get') {
         config.params = { ...config.params };
@@ -58,13 +85,18 @@ export default class AxiosInstanceClass implements AxiosClass {
     });
   }
 
-
+  /**
+   * 设置响应拦截器
+   * @date 2020-09-29
+   * @param {any} options:AxiosConfig
+   * @returns {any}
+   */
   setResponseInterceptors(options: AxiosConfig) {
-    const { Instance } = this;
+    const { axiosInstance } = this;
     const { responseChain } = options;
     if (Array.isArray(responseChain)) {
       responseChain.forEach((executer: Function, index) => {
-        Instance.interceptors.response.use(
+        axiosInstance.interceptors.response.use(
           res => {
             if (res) {
               index === 0 && this.removePending(res.config);
@@ -80,5 +112,7 @@ export default class AxiosInstanceClass implements AxiosClass {
 
   }
 }
+
+export { axios }
 
 

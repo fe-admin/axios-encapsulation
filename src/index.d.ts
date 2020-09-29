@@ -3,7 +3,7 @@ import { IAxiosRetryConfig } from 'axios-retry';
 
 
 export interface AxiosClass {
-  Instance: AxiosInstance;
+  axiosInstance: AxiosInstance;
 }
 
 export interface AxiosConfig extends AxiosRequestConfig {
@@ -19,17 +19,15 @@ export interface PendingItem {
   params: any;
 }
 
-export interface ResponseInterceptorsFunc {
-  (source: AxiosResponse): Promise;
-}
 
-export default class AxiosInstanceClass implements AxiosClass {
+export default class EncapsulationClass implements AxiosClass {
   pending: PendingItem[];
-  Instance: AxiosInstance;
+  axiosInstance: AxiosClass;
   constructor(options: AxiosConfig);
-  instance(options: AxiosConfig): void;
+  init(options: AxiosConfig): void;
   removePending(config: any): void;
   setRequestInterceptors(): void;
+  addRequestInterceptors(): void;
+  setResponseInterceptors(): void;
 }
 
-export { };

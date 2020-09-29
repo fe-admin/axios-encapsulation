@@ -1,6 +1,6 @@
 {
   "name": "axios-encapsulation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "one encapsulation for axios ",
   "main": "./lib/index.js",
   "scripts": {
