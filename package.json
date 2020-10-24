@@ -1,6 +1,6 @@
 {
   "name": "axios-encapsulation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "one encapsulation for axios ",
   "main": "./lib/index.js",
   "scripts": {
@@ -24,8 +24,7 @@
   "homepage": "https://github.com/fe-cookbook/axios-encapsulation#readme",
   "dependencies": {
     "axios": "^0.20.0",
-    "axios-retry": "^3.1.8",
-    "lodash.set": "^4.3.2"
+    "axios-retry": "^3.1.8"
   },
   "devDependencies": {
     "@types/lodash.set": "^4.3.6",

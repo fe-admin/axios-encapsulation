@@ -2,9 +2,8 @@
  * @Author: jubao.tian 
  * @Date: 2020-09-29 10:23:30 
  * @Last Modified by: jubao.tian
- * @Last Modified time: 2020-09-29 14:31:37
+ * @Last Modified time: 2020-09-29 15:13:36
  */
-import set from 'lodash.set';
 import axiosRetry from 'axios-retry';
 import axios, { AxiosInstance, CancelToken } from 'axios';
 import { detectDuplicateRequests } from './util';
@@ -40,7 +39,7 @@ export default class EncapsulationClass implements AxiosClass {
     if (options.axiosRetryConfig) {
       axiosRetry(this.axiosInstance, options.axiosRetryConfig);
     }
-    this.setRequestInterceptors();
+    this.setRequestInterceptors(options);
     this.setResponseInterceptors(options);
   }
 
@@ -56,26 +55,16 @@ export default class EncapsulationClass implements AxiosClass {
     }
   }
 
-  addRequestInterceptors(path: string, value: object) {
-    const { axiosInstance } = this;
-    axiosInstance.interceptors.request.use(config => {
-      set(config, path, value);
-      return config;
-    });
-  }
-
   /**
    * 设置请求拦截器
    * @date 2020-09-29
    * @returns {any}
    */
-  setRequestInterceptors() {
+  setRequestInterceptors(options: AxiosConfig) {
     const { axiosInstance, pending } = this;
+    const { requestChain } = options;
     axiosInstance.interceptors.request.use(config => {
       const { method, params } = config
-      if (config.method === 'get') {
-        config.params = { ...config.params };
-      }
       this.removePending(config);
       config.cancelToken = new CancelToken(executor => {
         const item: PendingItem = { url: config.url, cancel: executor, method, params }
@@ -83,6 +72,13 @@ export default class EncapsulationClass implements AxiosClass {
       });
       return config;
     });
+    if (Array.isArray(requestChain)) {
+      requestChain.forEach((executer: Function) => {
+        axiosInstance.interceptors.request.use(
+          config => executer(config)
+        );
+      })
+    }
   }
 
   /**
@@ -109,7 +105,6 @@ export default class EncapsulationClass implements AxiosClass {
         );
       })
     }
-
   }
 }
 

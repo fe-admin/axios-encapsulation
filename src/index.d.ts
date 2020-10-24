@@ -8,6 +8,7 @@ export interface AxiosClass {
 
 export interface AxiosConfig extends AxiosRequestConfig {
   axiosRetryConfig?: IAxiosRetryConfig;
+  requestChain?: [],
   responseChain?: [],
   transformResponseData: (config: AxiosResponse) => any
 }
@@ -27,7 +28,6 @@ export default class EncapsulationClass implements AxiosClass {
   init(options: AxiosConfig): void;
   removePending(config: any): void;
   setRequestInterceptors(): void;
-  addRequestInterceptors(): void;
   setResponseInterceptors(): void;
 }
 
