@@ -1,11 +1,12 @@
 {
   "name": "axios-encapsulation",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "one encapsulation for axios ",
   "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "yarn run eslint src"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
   },
   "devDependencies": {
     "@types/lodash.set": "^4.3.6",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
     "typescript": "^4.0.2"
   },
   "types": "./lib/index.d.ts"

@@ -4,6 +4,8 @@ Axios plugin that intercepts failed requests and retries them whenever possible.
 
 ## 1.0.3
 add responseChain
+## 1.0.4
+add eslint, fix errors
 
 ## Installation
 
@@ -36,7 +38,7 @@ const encapsulationInstance = new encapsulation({
       return (error.config.method === 'get' || error.config.method === 'post');
     }
   },
-  responseChain: [transformData],
+  responseChain: [transformData]
 })
 
 const { axiosInstance } = encapsulationInstance;

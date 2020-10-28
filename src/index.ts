@@ -2,10 +2,10 @@
  * @Author: jubao.tian 
  * @Date: 2020-09-29 10:23:30 
  * @Last Modified by: jubao.tian
- * @Last Modified time: 2020-09-29 15:13:36
+ * @Last Modified time: 2020-10-28 13:56:49
  */
 import axiosRetry from 'axios-retry';
-import axios, { AxiosInstance, CancelToken } from 'axios';
+import axios, { AxiosInstance, CancelToken, Executer } from 'axios';
 import { detectDuplicateRequests } from './util';
 import { AxiosClass, PendingItem, AxiosConfig } from './index.d';
 
@@ -35,7 +35,7 @@ export default class EncapsulationClass implements AxiosClass {
    * @param {any} options:AxiosConfig
    * @returns {any}
    */
-  init(options: AxiosConfig) {
+  init(options: AxiosConfig): void {
     if (options.axiosRetryConfig) {
       axiosRetry(this.axiosInstance, options.axiosRetryConfig);
     }
@@ -43,7 +43,7 @@ export default class EncapsulationClass implements AxiosClass {
     this.setResponseInterceptors(options);
   }
 
-  removePending(config: any) {
+  removePending(config: any): void {
     const { pending } = this;
     for (let index = 0; index < pending.length; index++) {
       const item: PendingItem = pending[index];
@@ -60,7 +60,7 @@ export default class EncapsulationClass implements AxiosClass {
    * @date 2020-09-29
    * @returns {any}
    */
-  setRequestInterceptors(options: AxiosConfig) {
+  setRequestInterceptors(options: AxiosConfig): void {
     const { axiosInstance, pending } = this;
     const { requestChain } = options;
     axiosInstance.interceptors.request.use(config => {
@@ -73,7 +73,7 @@ export default class EncapsulationClass implements AxiosClass {
       return config;
     });
     if (Array.isArray(requestChain)) {
-      requestChain.forEach((executer: Function) => {
+      requestChain.forEach((executer: Executer) => {
         axiosInstance.interceptors.request.use(
           config => executer(config)
         );
@@ -87,11 +87,12 @@ export default class EncapsulationClass implements AxiosClass {
    * @param {any} options:AxiosConfig
    * @returns {any}
    */
-  setResponseInterceptors(options: AxiosConfig) {
+
+  setResponseInterceptors(options: AxiosConfig): void {
     const { axiosInstance } = this;
     const { responseChain } = options;
     if (Array.isArray(responseChain)) {
-      responseChain.forEach((executer: Function, index) => {
+      responseChain.forEach((executer: Executer, index) => {
         axiosInstance.interceptors.response.use(
           res => {
             if (res) {

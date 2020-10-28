@@ -9,7 +9,7 @@ export function detectDuplicateRequests(request: PendingItem, config: AxiosConfi
       Object.keys(params).forEach(key => {
         if (params[key] !== config.params[key]) {
           falg = false
-        };
+        }
       })
     }
   }

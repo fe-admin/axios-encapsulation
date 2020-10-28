@@ -31,3 +31,6 @@ export default class EncapsulationClass implements AxiosClass {
   setResponseInterceptors(): void;
 }
 
+export interface Executer {
+  (res: AxiosResponse): Promise;
+}
