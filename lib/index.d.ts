@@ -1,12 +1,22 @@
-import { AxiosInstance } from 'axios';
-import { AxiosClass, PendingItem, AxiosConfig } from './index.d';
-export default class AxiosInstanceClass implements AxiosClass {
+import axios, { AxiosRequestConfig } from "axios";
+import { PendingItem, EncapsulationConfig, requestExecuter, responseExecuter } from "../index.d";
+/**
+ * axios encapsulation封装类
+ */
+export default class Encapsulation {
     pending: PendingItem[];
-    Instance: AxiosInstance;
-    constructor(options: AxiosConfig);
-    instance(options: AxiosConfig): void;
-    removePending(config: any): void;
-    addRequestInterceptors(path: string, value: object): void;
-    setRequestInterceptors(): void;
-    setResponseInterceptors(options: AxiosConfig): void;
+    Axios: import("axios").AxiosInstance;
+    constructor(options: EncapsulationConfig);
+    removePending(config: AxiosRequestConfig): void;
+    /**
+     * 设置请求拦截器
+     * @date 2020-09-29
+     * @returns {any}
+     */
+    setRequestInterceptors(request: requestExecuter[]): void;
+    /**
+     * 设置响应拦截器
+     */
+    setResponseInterceptors(response: responseExecuter[]): void;
 }
+export { axios };

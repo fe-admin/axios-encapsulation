@@ -1,53 +1,41 @@
 /*
- * @Author: jubao.tian 
- * @Date: 2020-09-29 10:23:30 
+ * @Author: jubao.tian
+ * @Date: 2020-09-29 10:23:30
  * @Last Modified by: jubao.tian
- * @Last Modified time: 2020-10-28 13:56:49
+ * @Last Modified time: 2021-06-15 17:46:39
  */
-import axiosRetry from 'axios-retry';
-import axios, { AxiosInstance, CancelToken, Executer } from 'axios';
-import { detectDuplicateRequests } from './util';
-import { AxiosClass, PendingItem, AxiosConfig } from './index.d';
+import Retry from "axios-retry";
+import axios, { AxiosRequestConfig } from "axios";
+import { detectDuplicateRequests } from "./utils";
+import {
+  PendingItem,
+  EncapsulationConfig,
+  requestExecuter,
+  responseExecuter,
+} from "../index.d";
 
-const { CancelToken } = axios;
 /**
  * axios encapsulation封装类
  */
-export default class EncapsulationClass implements AxiosClass {
+export default class Encapsulation {
   pending: PendingItem[] = [];
-  public axiosInstance;
-  /**
-   * 描述 构造函数
-   * @date 2020-09-29
-   * @param {any} options:AxiosConfig
-   * @returns {any}
-   */
-  constructor(options: AxiosConfig) {
-    // Axios实例
-    const Instance: AxiosInstance = axios.create(options);
-    this.axiosInstance = Instance;
-    this.init(options);
-  }
+  public Axios;
 
-  /**
-   * 初始化函数
-   * @date 2020-09-29
-   * @param {any} options:AxiosConfig
-   * @returns {any}
-   */
-  init(options: AxiosConfig): void {
-    if (options.axiosRetryConfig) {
-      axiosRetry(this.axiosInstance, options.axiosRetryConfig);
+  constructor(options: EncapsulationConfig) {
+    const { axiosConfig, retry, request, response } = options;
+    this.Axios = axios.create(axiosConfig);
+    if (retry) {
+      Retry(this.Axios, retry);
     }
-    this.setRequestInterceptors(options);
-    this.setResponseInterceptors(options);
+    request && this.setRequestInterceptors(request);
+    response && this.setResponseInterceptors(response);
   }
 
-  removePending(config: any): void {
+  removePending(config: AxiosRequestConfig): void {
     const { pending } = this;
     for (let index = 0; index < pending.length; index++) {
       const item: PendingItem = pending[index];
-      const flag = config ? detectDuplicateRequests(item, config) : true
+      const flag = config ? detectDuplicateRequests(item, config) : true;
       if (flag) {
         item.cancel();
         pending.splice(index, 1);
@@ -60,41 +48,45 @@ export default class EncapsulationClass implements AxiosClass {
    * @date 2020-09-29
    * @returns {any}
    */
-  setRequestInterceptors(options: AxiosConfig): void {
-    const { axiosInstance, pending } = this;
-    const { requestChain } = options;
-    axiosInstance.interceptors.request.use(config => {
-      const { method, params } = config
+
+  setRequestInterceptors(request: requestExecuter[]): void {
+    const { Axios, pending } = this;
+    Axios.interceptors.request.use((config: AxiosRequestConfig) => {
+      const { method, params } = config;
+      console.info(params);
       this.removePending(config);
-      config.cancelToken = new CancelToken(executor => {
-        const item: PendingItem = { url: config.url, cancel: executor, method, params }
+      const { CancelToken } = axios;
+      config.cancelToken = new CancelToken((executor) => {
+        const item: PendingItem = {
+          url: config.url,
+          cancel: executor,
+          method: method,
+          params,
+        };
         pending.push(item);
       });
       return config;
     });
-    if (Array.isArray(requestChain)) {
-      requestChain.forEach((executer: Executer) => {
-        axiosInstance.interceptors.request.use(
-          config => executer(config)
+
+    if (Array.isArray(request)) {
+      request.forEach((executer: requestExecuter) => {
+        Axios.interceptors.request.use((config: AxiosRequestConfig) =>
+          executer(config)
         );
-      })
+      });
     }
   }
 
   /**
    * 设置响应拦截器
-   * @date 2020-09-29
-   * @param {any} options:AxiosConfig
-   * @returns {any}
    */
 
-  setResponseInterceptors(options: AxiosConfig): void {
-    const { axiosInstance } = this;
-    const { responseChain } = options;
-    if (Array.isArray(responseChain)) {
-      responseChain.forEach((executer: Executer, index) => {
-        axiosInstance.interceptors.response.use(
-          res => {
+  setResponseInterceptors(response: responseExecuter[]): void {
+    const { Axios } = this;
+    if (Array.isArray(response)) {
+      response.forEach((executer: responseExecuter, index) => {
+        Axios.interceptors.response.use(
+          (res) => {
             if (res) {
               index === 0 && this.removePending(res.config);
               return executer(res);
@@ -104,11 +96,9 @@ export default class EncapsulationClass implements AxiosClass {
             return Promise.reject(err);
           }
         );
-      })
+      });
     }
   }
 }
 
-export { axios }
-
-
+export { axios };
