@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint src"
+    "lint": "npx eslint src",
+    "patch": "npx relix --patch",
+    "minor": "npx relix --minor",
+    "major": "npx relix --major"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "eslint": "^7.28.0",
+    "relix": "^1.3.0",
     "typescript": "^4.3.2"
   },
   "types": "./index.d.ts"

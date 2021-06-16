@@ -2,7 +2,7 @@
  * @Author: jubao.tian
  * @Date: 2020-09-29 10:23:30
  * @Last Modified by: jubao.tian
- * @Last Modified time: 2021-06-15 17:46:39
+ * @Last Modified time: 2021-06-16 09:22:17
  */
 import Retry from "axios-retry";
 import axios, { AxiosRequestConfig } from "axios";
@@ -53,7 +53,6 @@ export default class Encapsulation {
     const { Axios, pending } = this;
     Axios.interceptors.request.use((config: AxiosRequestConfig) => {
       const { method, params } = config;
-      console.info(params);
       this.removePending(config);
       const { CancelToken } = axios;
       config.cancelToken = new CancelToken((executor) => {

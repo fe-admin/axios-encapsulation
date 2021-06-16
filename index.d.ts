@@ -1,9 +1,4 @@
-import {
-  AxiosInstance,
-  Method,
-  AxiosResponse,
-  AxiosRequestConfig,
-} from "axios";
+import { Method, AxiosResponse, AxiosRequestConfig } from "axios";
 import { IAxiosRetryConfig } from "axios-retry";
 
 export interface EncapsulationConfig {
