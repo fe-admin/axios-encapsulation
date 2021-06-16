@@ -1,15 +1,15 @@
 {
   "name": "axios-encapsulation",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "one encapsulation for axios ",
   "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint src",
-    "patch": "npx relix --patch --remote upstream/main",
-    "minor": "npx relix --minor --remote upstream/main",
-    "major": "npx relix --major --remote upstream/main"
+    "patch": "npx relix --patch --remote origin/main",
+    "minor": "npx relix --minor --remote origin/main",
+    "major": "npx relix --major --remote origin/main"
   },
   "repository": {
     "type": "git",
