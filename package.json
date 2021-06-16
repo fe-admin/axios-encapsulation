@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fe-cookbook/axios-encapsulation.git"
+    "url": "git+https://github.com/fe-admin/axios-encapsulation.git"
   },
   "keywords": [
     "axios",
