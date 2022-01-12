@@ -35,7 +35,7 @@ export default class Encapsulation {
     const { pending } = this;
     for (let index = 0; index < pending.length; index++) {
       const item: PendingItem = pending[index];
-      const flag = config ? detectDuplicateRequests(item, config) : true;
+      const flag = detectDuplicateRequests(item, config);
       if (flag) {
         item.cancel();
         pending.splice(index, 1);
@@ -51,28 +51,24 @@ export default class Encapsulation {
 
   setRequestInterceptors(request: requestExecuter[]): void {
     const { Axios, pending } = this;
-    Axios.interceptors.request.use((config: AxiosRequestConfig) => {
-      const { method, params } = config;
-      this.removePending(config);
-      const { CancelToken } = axios;
-      config.cancelToken = new CancelToken((executor) => {
-        const item: PendingItem = {
-          url: config.url,
-          cancel: executor,
-          method: method,
-          params,
-        };
-        pending.push(item);
-      });
-      return config;
-    });
-
     if (Array.isArray(request)) {
       request.forEach((executer: requestExecuter) => {
-        Axios.interceptors.request.use((config: AxiosRequestConfig) =>
-          executer(config)
-        );
-      });
+        Axios.interceptors.request.use((config: AxiosRequestConfig) => {
+          const { method, params } = config;
+          this.removePending(config);
+          const { CancelToken } = axios;
+          config.cancelToken = new CancelToken((executor) => {
+            const item: PendingItem = {
+              url: config.url,
+              cancel: executor,
+              method: method,
+              params,
+            };
+            pending.push(item);
+          });
+          return  executer(config);
+        });
+      })
     }
   }
 
@@ -83,11 +79,10 @@ export default class Encapsulation {
   setResponseInterceptors(response: responseExecuter[]): void {
     const { Axios } = this;
     if (Array.isArray(response)) {
-      response.forEach((executer: responseExecuter, index) => {
+      response.forEach((executer: responseExecuter) => {
         Axios.interceptors.response.use(
           (res) => {
             if (res) {
-              index === 0 && this.removePending(res.config);
               return executer(res);
             }
           },

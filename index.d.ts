@@ -8,11 +8,15 @@ export interface EncapsulationConfig {
   axiosConfig?: AxiosRequestConfig;
 }
 
+export interface wrapAxiosRequestConfig extends AxiosRequestConfig{
+  stamp?: never;
+}
+
 export interface PendingItem {
   url: string | undefined;
   cancel: () => void;
   method?: Method;
-  params: AxiosRequestConfig;
+  params: wrapAxiosRequestConfig;
 }
 
 export interface requestExecuter {
