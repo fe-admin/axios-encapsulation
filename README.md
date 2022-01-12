@@ -51,3 +51,5 @@ const encapsulationInstance = new Encapsulation({
 const { Axios } = encapsulationInstance;
 const { get, post } = Axios;
 ```
+## 1.1.5
+> 修复 detectDuplicateRequests

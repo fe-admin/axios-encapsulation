@@ -1,6 +1,6 @@
 {
   "name": "axios-encapsulation",
-  "version": "1.1.3",
+  "version": "1.1.5",
   "description": "one encapsulation for axios ",
   "main": "./lib/index.js",
   "scripts": {
@@ -22,8 +22,8 @@
   "files": [
     "lib"
   ],
-  "author": "tjubao",
-  "email": "tjubao@gmail.com",
+  "author": "fe-admin",
+  "email": "13488881765@tjubao.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/fe-admin/axios-encapsulation/issues"
